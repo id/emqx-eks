@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: emqx
+---
+apiVersion: apps.emqx.io/v2beta1
+kind: EMQX
+metadata:
+  name: emqx
+  namespace: emqx
+spec:
+  image: emqx/emqx-enterprise:5.4.1
+  config:
+    data: |
+      log.console.level = warning
+      listeners.ssl.default.enable = false
+      listeners.ws.default.enable = false
+      listeners.wss.default.enable = false
+      license {
+        key = "file:///mnt/license/emqx.lic"
+      }
+  coreTemplate:
+    spec:
+      replicas: 3
+      volumeClaimTemplates:
+        storageClassName: ebs-sc
+        resources:
+          requests:
+            storage: 50Gi
+        accessModes:
+          - ReadWriteOnce
+      extraVolumes:
+        - name: emqx-license
+          secret:
+            secretName: emqx-license
+      extraVolumeMounts:
+        - name: emqx-license
+          mountPath: /mnt/license
+  # replicantTemplate:
+  #   spec:
+  #     replicas: 3
+  dashboardServiceTemplate:
+    metadata:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    spec:
+      type: LoadBalancer
+      loadBalancerClass: service.k8s.aws/nlb
+  listenersServiceTemplate:
+    metadata:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    spec:
+      type: LoadBalancer
+      loadBalancerClass: service.k8s.aws/nlb
