@@ -5,7 +5,30 @@ set -euo pipefail
 CLUSTER_NAME=${CLUSTER_NAME:-emqx}
 REGION=${REGION:-eu-north-1}
 
-eksctl create cluster --region $REGION --name $CLUSTER_NAME
+cat <<EOF | eksctl create cluster -f -
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ${CLUSTER_NAME}
+  region: ${REGION}
+
+nodeGroups:
+  - name: ng1-1a
+    instanceType: m7i.xlarge
+    availabilityZones:
+      - ${REGION}a
+    minSize: 1
+    maxSize: 1
+  - name: ng2-1b
+    instanceType: m7i.xlarge
+    availabilityZones:
+      - ${REGION}b
+    minSize: 1
+    maxSize: 1
+EOF
+
 eksctl utils associate-iam-oidc-provider --region $REGION --cluster $CLUSTER_NAME --approve
 eksctl create iamserviceaccount \
     --region $REGION \

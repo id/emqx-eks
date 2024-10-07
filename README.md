@@ -1,4 +1,4 @@
-# EMQX Deployed to AWS EKS with EMQX Operator
+# Deploying EMQX Enterprise to AWS EKS with EMQX Operator
 
 ## Pre-requisites
 

@@ -9,24 +9,25 @@ metadata:
   name: emqx
   namespace: emqx
 spec:
-  image: emqx/emqx-enterprise:5.4.1
+  image: emqx/emqx-enterprise:5.8.0
   config:
     data: |
       log.console.level = warning
       listeners.ssl.default.enable = false
       listeners.ws.default.enable = false
       listeners.wss.default.enable = false
+      durable_sessions.enable = true
       license {
         key = "file:///mnt/license/emqx.lic"
       }
   coreTemplate:
     spec:
-      replicas: 3
+      replicas: 2
       volumeClaimTemplates:
         storageClassName: ebs-sc
         resources:
           requests:
-            storage: 50Gi
+            storage: 10Gi
         accessModes:
           - ReadWriteOnce
       extraVolumes:
@@ -36,12 +37,20 @@ spec:
       extraVolumeMounts:
         - name: emqx-license
           mountPath: /mnt/license
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: emqx
   # replicantTemplate:
   #   spec:
   #     replicas: 3
   dashboardServiceTemplate:
     metadata:
       annotations:
+        service.beta.kubernetes.io/aws-load-balancer-type: external
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
     spec:
       type: LoadBalancer
@@ -49,6 +58,7 @@ spec:
   listenersServiceTemplate:
     metadata:
       annotations:
+        service.beta.kubernetes.io/aws-load-balancer-type: external
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
     spec:
       type: LoadBalancer
