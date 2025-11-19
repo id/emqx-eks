@@ -36,5 +36,6 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
 ## Cleanup
 
 ```bash
+kubectl delete -f manifests
 ./delete-eks-cluster.sh
 ```
