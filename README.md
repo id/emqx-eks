@@ -20,3 +20,21 @@ Add your license into `manifests/emqx-license.yaml` and apply the manifests:
 ```bash
 kubectl apply -f manifests
 ```
+
+## Access services
+
+To get external LB hostnames for EMQX Dashboard and listeners:
+```
+kubectl get svc -n emqx
+```
+
+Access to Grafana:
+```
+kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
+```
+
+## Cleanup
+
+```bash
+./delete-eks-cluster.sh
+```
