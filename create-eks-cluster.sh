@@ -13,15 +13,18 @@ kind: ClusterConfig
 metadata:
   name: ${CLUSTER_NAME}
   region: ${REGION}
+  version: "1.34"
 
 nodeGroups:
   - name: ng1-1a
+    amiFamily: AmazonLinux2023
     instanceType: m7i.xlarge
     availabilityZones:
       - ${REGION}a
     minSize: 1
     maxSize: 1
   - name: ng2-1b
+    amiFamily: AmazonLinux2023
     instanceType: m7i.xlarge
     availabilityZones:
       - ${REGION}b
