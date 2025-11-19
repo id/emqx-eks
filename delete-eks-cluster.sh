@@ -15,7 +15,7 @@ echo ""
 
 # Check if cluster exists
 if ! aws eks describe-cluster --name $CLUSTER_NAME --region $REGION &>/dev/null; then
-    echo "⚠️  Cluster '$CLUSTER_NAME' not found in region '$REGION'"
+    echo "Cluster '$CLUSTER_NAME' not found in region '$REGION'"
     echo "Proceeding to clean up IAM resources..."
 else
     echo "✓ Cluster '$CLUSTER_NAME' found"
@@ -100,6 +100,7 @@ if aws eks describe-cluster --name $CLUSTER_NAME --region $REGION &>/dev/null; t
     eksctl delete cluster \
         --region $REGION \
         --name $CLUSTER_NAME \
+        --disable-nodegroup-eviction \
         --wait
     echo "✓ EKS cluster deleted"
 else
