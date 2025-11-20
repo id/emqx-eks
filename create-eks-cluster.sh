@@ -51,7 +51,6 @@ eksctl create addon \
     --service-account-role-arn "$SA_ROLE_ARN" \
     --force
 
-wget -nc -q https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
 aws iam create-policy \
     --region $REGION \
     --policy-name AWSLoadBalancerControllerIAMPolicy \

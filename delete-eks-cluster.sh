@@ -153,17 +153,6 @@ else
 fi
 
 echo ""
-echo "Step 7: Cleaning up local files..."
-echo "----------------------------------------------"
-if [ -f "iam_policy.json" ]; then
-    echo "Removing downloaded iam_policy.json..."
-    rm -f iam_policy.json
-    echo "✓ Local files cleaned up"
-else
-    echo "No local files to clean up"
-fi
-
-echo ""
 echo "============================================"
 echo "✓ Cleanup Complete!"
 echo "============================================"

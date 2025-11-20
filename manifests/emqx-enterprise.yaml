@@ -10,15 +10,14 @@ metadata:
   namespace: emqx
 spec:
   image: emqx/emqx-enterprise:5.8.6
+  bootstrapAPIKeys:
+    - key: key
+      secret: secret
   config:
     data: |
       license.key = "file:///mnt/license/emqx.lic"
-      ## Prometheus Push Gateway Integration
       prometheus {
-        push_gateway_server = "http://pushgateway.monitoring.svc.cluster.local:9091"
-        interval = 10000
-        headers {}
-        job_name = "${name}/instance/${name}~${host}"
+        enable = true
         mnesia_collector = disabled
         vm_dist_collector = disabled
         vm_memory_collector = disabled
